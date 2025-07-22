@@ -1,6 +1,7 @@
 import express from "express";
 import fetch from "node-fetch";
 import dotenv from "dotenv";
+import { scrapeSoldItems } from "./utils/scrapeSoldItems.js"; // Assuming you have a scraper.js file for scraping sold items
 dotenv.config();
 console.log("Client ID:", process.env.EBAY_CLIENT_ID);
 console.log("Client Secret:", process.env.EBAY_CLIENT_SEC);
@@ -54,6 +55,15 @@ app.get("/api/search", async (req, res) => {
   } catch (err) {
     console.error("Error fetching from eBay:", err);
     res.status(500).json({ error: "Failed to fetch data from eBay" });
+  }
+});
+app.get("/api/sold", async (req, res) => {
+  const term = req.query.term || "charizard";
+  try {
+    const data = await scrapeSoldItems(term);
+    res.json(data);
+  } catch (error) {
+    res.status(500).json({ error: "Failed to fetch sold items" });
   }
 });
 
