@@ -37,7 +37,10 @@ export async function scrapeSoldItems(searchTerm = "charizard") {
       const priceText = $(el).find(".s-item__price").text().trim();
       const link = $(el).find(".s-item__link").attr("href");
       const date = $(el).find(".s-item__title--tagblock").text();
-      const image = $(el).find(".s-item__image-img").attr("src");
+      const image = 
+      $(el).find(".s-item__image-img").attr("src") || 
+      $(el).find(".s-item__image-img").attr("data-src") || 
+      $(el).find(".s-item__image-img").attr("data-img-src");
 
       const originalPrice = $(el).find(".STRIKETHROUGH").text().trim() || null;
       const wasOfferAccepted = !!originalPrice;
