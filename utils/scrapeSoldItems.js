@@ -38,10 +38,10 @@ export async function scrapeSoldItems(searchTerm = "charizard") {
       const link = $(el).find(".s-item__link").attr("href");
       const date = $(el).find(".s-item__title--tagblock").text();
       const image = 
-      $(el).find(".s-item__image-img").attr("src") || 
-      $(el).find(".s-item__image-img").attr("data-src") || 
-      $(el).find(".s-item__image-img").attr("data-img-src");
-
+        $(el).find(".s-item__image img").attr("src") ||
+        $(el).find(".s-item__image img").attr("data-src") ||
+        $(el).find(".s-item__image").attr("data-DS_IMAGE") || 
+        null;
       const originalPrice = $(el).find(".STRIKETHROUGH").text().trim() || null;
       const wasOfferAccepted = !!originalPrice;
       const salePrice = priceText.replace(originalPrice, "").trim();
@@ -56,7 +56,7 @@ export async function scrapeSoldItems(searchTerm = "charizard") {
           wasOfferAccepted,
           date,
           link,
-          image,
+          image: image || null,
           isGraded,
           gradeService,
           gradeScore,
