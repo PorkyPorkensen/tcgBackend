@@ -6,8 +6,10 @@ import dotenv from "dotenv";
 dotenv.config();
 
 if (!admin.apps.length) {
+  const firebaseConfig = JSON.parse(process.env.FIREBASE_ADMIN_KEY);
+
   admin.initializeApp({
-    credential: cert(process.env.FIREBASE_ADMIN_KEY),
+    credential: cert(firebaseConfig),
   });
 }
 
