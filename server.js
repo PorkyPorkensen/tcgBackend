@@ -4,10 +4,12 @@ import dotenv from "dotenv";
 import { scrapeSoldItems } from "./utils/scrapeSoldItems.js"; // Assuming you have a scraper.js file for scraping sold items
 dotenv.config();
 import cors from "cors";
-
+import cardRoutes from "./routes/cards.js";
 dotenv.config();
 const app = express();
 app.use(cors());
+app.use(express.json());
+app.use("/api/cards", cardRoutes);
 
 const getEbayAccessToken = async () => {
 const credentials = Buffer.from(
