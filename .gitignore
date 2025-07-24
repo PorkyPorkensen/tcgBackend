@@ -24,3 +24,6 @@ dist-ssr
 *.sw?
 firebaseAdmin.json
 
+echo "firebaseServiceAccount.json"
+
+firebaseServiceAccount.json
