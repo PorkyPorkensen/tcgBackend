@@ -26,9 +26,12 @@ export async function scrapeSoldItems(searchTerm = "charizard") {
 
   try {
     const { data: html } = await axios.get(url, {
-      headers: { 'User-Agent': 'Mozilla/5.0' }
+      headers: { 'User-Agent': 'Mozilla/5.0',
+    'Cache-Control': 'no-cache',
+    'Pragma': 'no-cache',
+    'Expires': '0' }
     });
-
+    console.log(html)
     const $ = cheerio.load(html);
     const soldItems = [];
 
