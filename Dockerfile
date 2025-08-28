@@ -24,10 +24,10 @@ RUN apt-get update && apt-get install -y \
 
 WORKDIR /app
 
-COPY . .
-
 COPY docker/entrypoint.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh
+
+COPY . .
 
 RUN npm install
 
