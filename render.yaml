@@ -3,7 +3,7 @@ services:
     name: offline-tcg-backend
     env: node
     buildCommand: npm install
-    startCommand: node server.js
+    startCommand: npx puppeteer browsers install chrome && node server.js
     plan: free
     envVars:
       - key: NODE_ENV
