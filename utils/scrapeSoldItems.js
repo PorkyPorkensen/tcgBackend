@@ -8,9 +8,11 @@ async function scrapeSoldItems(term) {
 
   const browser = await puppeteer.launch({
     headless: true,
-    executablePath,
     args: ["--no-sandbox", "--disable-setuid-sandbox"],
   });
+  if (process.env.PUPPETEER_EXECUTABLE_PATH) {
+  launchOptions.executablePath = process.env.PUPPETEER_EXECUTABLE_PATH;
+}
   const page = await browser.newPage();
 
   for (let p = 1; p <= 3; p++) {
