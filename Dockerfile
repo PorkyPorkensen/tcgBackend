@@ -22,10 +22,6 @@ RUN apt-get update && apt-get install -y \
     --no-install-recommends && \
     rm -rf /var/lib/apt/lists/*
 
-FROM node:22-slim
-
-# ...your install steps...
-
 WORKDIR /app
 
 COPY entrypoint.sh /entrypoint.sh
@@ -36,4 +32,3 @@ COPY . .
 RUN npm install
 
 ENTRYPOINT ["/entrypoint.sh"]
-
