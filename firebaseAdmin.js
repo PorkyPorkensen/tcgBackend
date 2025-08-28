@@ -7,9 +7,15 @@ import fs from "fs";
 dotenv.config();
 
 if (!admin.apps.length) {
-  // Read the file path from the env variable
-  const serviceAccountPath = process.env.FIREBASE_ADMIN_KEY;
-  const firebaseConfig = JSON.parse(fs.readFileSync(serviceAccountPath, "utf8"));
+  let firebaseConfig;
+  const key = process.env.FIREBASE_ADMIN_KEY;
+  if (key?.trim().startsWith("{")) {
+    // JSON string in env var (Render)
+    firebaseConfig = JSON.parse(key);
+  } else {
+    // File path in env var (local)
+    firebaseConfig = JSON.parse(fs.readFileSync(key, "utf8"));
+  }
 
   admin.initializeApp({
     credential: cert(firebaseConfig),
