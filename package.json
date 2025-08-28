@@ -5,7 +5,13 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "nodemon server.js",
-    "postinstall": "puppeteer install chrome"
+    "postinstall": "puppeteer install"
+  },
+    "puppeteer": {
+    "args": [
+      "--no-sandbox",
+      "--disable-setuid-sandbox"
+    ]
   },
   "keywords": [],
   "author": "",
