@@ -51,7 +51,7 @@ app.get("/api/search", async (req, res) => {
 
     const response = await fetch(`${EBAY_API}?q=${encodeURIComponent(q)}&category_ids=${categoryId}&limit=8&offset=0&filter=${filter}`, {
       headers: {
-        "Authorization": `Bearer ${token}`,
+        "Authorization": `Bearer '${token}'`,
         "Content-Type": "application/json",
       },
     });
