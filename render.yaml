@@ -1,11 +1,8 @@
 services:
   - type: web
     name: offline-tcg-backend
-    env: node
-    buildCommand: npm install
-    startCommand: npx puppeteer browsers install chrome && node server.js
+    env: docker
     plan: free
     envVars:
       - key: NODE_ENV
         value: production
-  
