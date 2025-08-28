@@ -8,9 +8,10 @@ async function scrapeSoldItems(term) {
 
         console.log("Launching Puppeteer...");
         const browser = await puppeteer.launch({
-          headless: true,
-          args: ["--no-sandbox", "--disable-setuid-sandbox"],
-        });
+        headless: true,
+        executablePath: puppeteer.executablePath(), // <-- add this line
+        args: ["--no-sandbox", "--disable-setuid-sandbox"],
+      });
         const page = await browser.newPage();
 
         for (let p = 1; p <= 1; p++) {
