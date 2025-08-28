@@ -4,11 +4,8 @@ async function scrapeSoldItems(term) {
   const results  = [];
   const baseUrl = "https://www.ebay.com/sch/i.html";
 
-  const chromePath = puppeteer.executablePath();
-
   const browser = await puppeteer.launch({
     headless: true,
-    executablePath: chromePath, // <-- Add this line
     args: ["--no-sandbox", "--disable-setuid-sandbox"],
   });
   const page = await browser.newPage();

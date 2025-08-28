@@ -1,17 +1,11 @@
 {
+  "type": "module",
   "name": "backend",
   "version": "1.0.0",
   "main": "server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node server.js",
-    "postinstall": "npx puppeteer browsers install chrome"
-  },
-    "puppeteer": {
-    "args": [
-      "--no-sandbox",
-      "--disable-setuid-sandbox"
-    ]
+    "start": "nodemon server.js"
   },
   "keywords": [],
   "author": "",
@@ -26,6 +20,6 @@
     "firebase-admin": "^13.4.0",
     "node-fetch": "^3.3.2",
     "nodemon": "^3.1.10",
-    "puppeteer": "^24.17.1"
+    "puppeteer": "^24.17.0"
   }
 }
