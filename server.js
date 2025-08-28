@@ -8,7 +8,11 @@ import cardRoutes from "./routes/cards.js";
 dotenv.config();
 const app = express();
 app.use(cors({
-  origin: ["https://tcgtracker.ca", "http://localhost:5173"], // add your deployed frontend URL here
+  origin: [
+    "https://tcgtracker.ca",
+    "https://www.tcgtracker.ca",
+    "http://localhost:5173"
+  ],
 }));
 app.use(express.json());
 app.use("/api/cards", cardRoutes);
