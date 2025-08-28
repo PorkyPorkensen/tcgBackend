@@ -1,77 +1,71 @@
-import * as cheerio from "cheerio";
-import axios from "axios";
+import puppeteer from "puppeteer";
 
-function delay(ms) {
-  return new Promise(resolve => setTimeout(resolve, ms));
-}
+async function scrapeSoldItems(term) {
+  const results  = [];
+  const baseUrl = "https://www.ebay.com/sch/i.html";
 
-function parseGradingInfo(title) {
-  const match = title.match(/\b(PSA|BGS|CGC|SGC)[\s\-:]*(\d{1,2}(\.\d)?)/i);
-  if (match) {
-    return {
-      isGraded: true,
-      gradeService: match[1].toUpperCase(),
-      gradeScore: match[2],
-    };
-  }
-  return {
-    isGraded: false,
-    gradeService: null,
-    gradeScore: null,
-  };
-}
+  const browser = await puppeteer.launch({
+    headless: true,
+    args: ["--no-sandbox", "--disable-setuid-sandbox"],
+  });
+  const page = await browser.newPage();
 
-export async function scrapeSoldItems(searchTerm = "charizard") {
-  const url = `https://www.ebay.com/sch/i.html?_nkw=${encodeURIComponent(searchTerm)}&LH_Sold=1&LH_Complete=1&_sop=13`;
+  for (let p = 1; p <= 3; p++) {
+    const url = `${baseUrl}?_nkw=${encodeURIComponent(
+      term
+    )}&LH_Sold=1&LH_Complete=1&_pgn=${p}`;
 
-  try {
-    const { data: html } = await axios.get(url, {
-      headers: { 'User-Agent': 'Mozilla/5.0',
-    'Cache-Control': 'no-cache',
-    'Pragma': 'no-cache',
-    'Expires': '0' }
-    });
-    console.log(html)
-    const $ = cheerio.load(html);
-    const soldItems = [];
+    console.log("Fetching:", url);
+    await page.goto(url, { waitUntil: "networkidle2" });
 
-    $(".s-item").each((i, el) => {
-      const title = $(el).find(".s-item__title").text();
-      const priceText = $(el).find(".s-item__price").text().trim();
-      const link = $(el).find(".s-item__link").attr("href");
-      const date = $(el).find(".s-item__title--tagblock").text();
-      const image = 
-        $(el).find(".s-item__image img").attr("src") ||
-        $(el).find(".s-item__image img").attr("data-src") ||
-        $(el).find(".s-item__image").attr("data-DS_IMAGE") || 
+    const items = await page.evaluate(() => {
+  const rows = document.querySelectorAll(".s-card");
+  return Array.from(rows)
+    .map((row) => {
+      const title =
+        row.querySelector(".s-card__title span")?.innerText ||
+        row.querySelector(".s-card__title")?.innerText ||
         null;
-      const originalPrice = $(el).find(".STRIKETHROUGH").text().trim() || null;
-      const wasOfferAccepted = !!originalPrice;
-      const salePrice = priceText.replace(originalPrice, "").trim();
 
-      const { isGraded, gradeService, gradeScore } = parseGradingInfo(title);
+      const price =
+        row.querySelector(".s-card__price span")?.innerText ||
+        row.querySelector(".s-card__price")?.innerText ||
+        null;
 
-      if (title && salePrice) {
-        soldItems.push({
-          title,
-          originalPrice: originalPrice || salePrice,
-          salePrice,
-          wasOfferAccepted,
-          date,
-          link,
-          image: image || null,
-          isGraded,
-          gradeService,
-          gradeScore,
-        });
+      const date =
+        row.querySelector(".s-card__date")?.innerText ||
+        null;
+
+      const link =
+        row.querySelector("a")?.href ||
+        null;
+
+      const image =
+        row.querySelector("img")?.src ||
+        null;
+
+      if (!title || !price || !link) return null;
+
+      // 🚫 filter out "Shop on eBay" ads
+      if (
+        title.toLowerCase().includes("shop on ebay") ||
+        title.toLowerCase().includes("shop with confidence")
+      ) {
+        return null;
       }
-    });
 
-    return soldItems.slice(2, 10);
-  } catch (err) {
-    console.error("Error scraping:", err.message);
-    return [];
-  } finally {
-    await delay(1000);
+      return { title, price, date, link, image };
+    })
+    .filter(Boolean);
+});
+    console.log(`Page ${p}: found ${items.length} items`);
+    results.push(...items);
+
+    if (results.length >= 30) break;
   }
+  console.log("Final scraped results:", results)
+  await browser.close();
+  return results.slice(0, 30);
 }
+
+export { scrapeSoldItems };

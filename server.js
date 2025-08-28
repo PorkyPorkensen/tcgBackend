@@ -58,11 +58,15 @@ app.get("/api/search", async (req, res) => {
   }
 });
 app.get("/api/sold", async (req, res) => {
+  console.log("HIT /api/sold endpoint")
   const term = req.query.term || "charizard";
+    console.log("Received /api/sold term:", term); // <--- Add this
   try {
     const data = await scrapeSoldItems(term);
+        console.log("scrapeSoldItems returned:", data); 
     res.json(data);
   } catch (error) {
+    console.error(error);
     res.status(500).json({ error: "Failed to fetch sold items" });
   }
 });
