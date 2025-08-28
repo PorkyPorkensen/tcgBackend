@@ -5,19 +5,14 @@ async function scrapeSoldItems(term) {
           const results  = [];
         const baseUrl = "https://www.ebay.com/sch/i.html";
 
-          const launchOptions = {
-            headless: true,
-            args: ["--no-sandbox", "--disable-setuid-sandbox"],
-          };
-
-
+        console.log("Launching Puppeteer...");
         const browser = await puppeteer.launch({
-  headless: true,
-  args: ["--no-sandbox", "--disable-setuid-sandbox"],
-});
+          headless: true,
+          args: ["--no-sandbox", "--disable-setuid-sandbox"],
+        });
         const page = await browser.newPage();
 
-        for (let p = 1; p <= 3; p++) {
+        for (let p = 1; p <= 1; p++) {
           const url = `${baseUrl}?_nkw=${encodeURIComponent(
             term
           )}&LH_Sold=1&LH_Complete=1&_pgn=${p}`;
