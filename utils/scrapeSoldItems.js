@@ -1,12 +1,14 @@
 import puppeteer from "puppeteer";
 
 async function scrapeSoldItems(term) {
-  const results  = [];
+   const results  = [];
   const baseUrl = "https://www.ebay.com/sch/i.html";
+
+  const executablePath = process.env.PUPPETEER_EXECUTABLE_PATH || puppeteer.executablePath();
 
   const browser = await puppeteer.launch({
     headless: true,
-    executablePath: puppeteer.executablePath(), // <-- Add this line
+    executablePath,
     args: ["--no-sandbox", "--disable-setuid-sandbox"],
   });
   const page = await browser.newPage();
