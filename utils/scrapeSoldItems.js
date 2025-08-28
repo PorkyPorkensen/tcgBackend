@@ -1,4 +1,5 @@
 import puppeteer from "puppeteer";
+console.log("Puppeteer executablePath:", puppeteer.executablePath());
 
 async function scrapeSoldItems(term) {
       try {
