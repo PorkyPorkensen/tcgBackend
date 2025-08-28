@@ -11,7 +11,10 @@ async function scrapeSoldItems(term) {
           };
 
 
-        const browser = await puppeteer.launch(launchOptions);
+        const browser = await puppeteer.launch({
+  headless: true,
+  args: ["--no-sandbox", "--disable-setuid-sandbox"],
+});
         const page = await browser.newPage();
 
         for (let p = 1; p <= 3; p++) {
