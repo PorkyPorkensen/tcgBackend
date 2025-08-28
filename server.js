@@ -7,7 +7,9 @@ import cors from "cors";
 import cardRoutes from "./routes/cards.js";
 dotenv.config();
 const app = express();
-app.use(cors());
+app.use(cors({
+  origin: ["https://tcgtracker.ca", "http://localhost:5173"], // add your deployed frontend URL here
+}));
 app.use(express.json());
 app.use("/api/cards", cardRoutes);
 
@@ -45,7 +47,7 @@ app.get("/api/search", async (req, res) => {
 
     const response = await fetch(`${EBAY_API}?q=${encodeURIComponent(q)}&category_ids=${categoryId}&limit=8&offset=0&filter=${filter}`, {
       headers: {
-        "Authorization": `Bearer '${token}'`,
+        "Authorization": `Bearer ${token}`,
         "Content-Type": "application/json",
       },
     });
