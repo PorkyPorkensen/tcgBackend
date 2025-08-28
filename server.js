@@ -7,7 +7,13 @@ import cors from "cors";
 import cardRoutes from "./routes/cards.js";
 dotenv.config();
 const app = express();
-app.use(cors());
+app.use(cors({
+  origin: [
+    "https://tcgtracker.ca",
+    "https://www.tcgtracker.ca", // <-- add this
+    "http://localhost:5173"
+  ],
+}));
 app.use(express.json());
 app.use("/api/cards", cardRoutes);
 
