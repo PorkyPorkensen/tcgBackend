@@ -6,6 +6,7 @@ async function scrapeSoldItems(term) {
 
   const browser = await puppeteer.launch({
     headless: true,
+    executablePath: puppeteer.executablePath(), // <-- Add this line
     args: ["--no-sandbox", "--disable-setuid-sandbox"],
   });
   const page = await browser.newPage();
