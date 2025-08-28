@@ -25,6 +25,10 @@ RUN apt-get update && apt-get install -y \
 WORKDIR /app
 COPY . .
 RUN npm install
-RUN npx puppeteer browsers install chrome
 
-CMD ["node", "server.js"]
+
+COPY entrypoint.sh /entrypoint.sh
+RUN chmod +x /entrypoint.sh
+
+ENTRYPOINT ["/entrypoint.sh"]
+
