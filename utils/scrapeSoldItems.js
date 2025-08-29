@@ -69,7 +69,7 @@ async function scrapeSoldItems(term) {
         }
         console.log("Final scraped results:", results)
         await browser.close();
-        return results.slice(0, 30);
+        return results.slice(0, 10);
       } catch (error) {
           console.error("scrapeSoldItems error:", error);
           throw error;
