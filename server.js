@@ -1,7 +1,8 @@
 import express from "express";
 import fetch from "node-fetch";
 import dotenv from "dotenv";
-import { scrapeSoldItems } from "./utils/scrapeSoldItems.js"; // Assuming you have a scraper.js file for scraping sold items
+import { scrapeSoldItems } from "./utils/scrapeSoldItems.js";
+import { scrapeSoldPrices } from "./utils/scrapeSoldPrices.js"; // Assuming you have a scraper.js file for scraping sold items
 dotenv.config();
 import cors from "cors";
 import cardRoutes from "./routes/cards.js";
@@ -74,6 +75,19 @@ app.get("/api/sold", async (req, res) => {
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: "Failed to fetch sold items" });
+  }
+});
+
+app.get("/api/sold-prices", async (req, res) => {
+  const { term } = req.query;
+  if (!term) return res.status(400).json({ error: "Missing term" });
+
+  try {
+    const prices = await scrapeSoldPrices(term);
+    res.json(prices[term] || []);
+  } catch (err) {
+    console.error("scrapeSoldPrices error:", err);
+    res.status(500).json({ error: "Failed to fetch sold prices" });
   }
 });
 

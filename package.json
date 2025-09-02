@@ -20,6 +20,7 @@
     "firebase-admin": "^13.4.0",
     "node-fetch": "^3.3.2",
     "nodemon": "^3.1.10",
-    "puppeteer": "^24.17.0"
+    "puppeteer": "^24.17.0",
+    "puppeteer-cluster": "^0.24.0"
   }
 }
