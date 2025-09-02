@@ -17,7 +17,7 @@ async function scrapeSoldPrices(terms) {
   await cluster.task(async ({ page, data: term }) => {
     await page.setRequestInterception(true);
     page.on('request', (req) => {
-      if (['image', 'stylesheet', 'font'].includes(req.resourceType())) {
+      if (['image', 'stylesheet', 'font', 'media', 'script', 'xhr', 'fetch'].includes(req.resourceType())) {
         req.abort();
       } else {
         req.continue();
@@ -41,7 +41,7 @@ async function scrapeSoldPrices(terms) {
       .filter((num) => !isNaN(num));
   });
 
-    results[term] = prices.slice(0, 10); // Only return the first 10 prices
+    results[term] = prices.slice(0, 7); // Only return the first 7 prices
   });
 
   for (const term of Array.isArray(terms) ? terms : [terms]) {
