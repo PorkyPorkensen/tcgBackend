@@ -16,16 +16,16 @@ async function scrapeSoldPrices(terms) {
 
   await cluster.task(async ({ page, data: term }) => {
     await page.setRequestInterception(true);
-    page.on('request', (req) => {
-      if (['image', 'stylesheet', 'font', 'media', 'script', 'xhr', 'fetch'].includes(req.resourceType())) {
-        req.abort();
-      } else {
-        req.continue();
-      }
-    });
+page.on('request', (req) => {
+  if (req.resourceType() !== 'document') {
+    req.abort();
+  } else {
+    req.continue();
+  }
+});
 
     const url = `https://www.ebay.com/sch/i.html?_nkw=${encodeURIComponent(term)}&LH_Sold=1&LH_Complete=1&_pgn=1`;
-    await page.goto(url, { waitUntil: "domcontentloaded" });
+    await page.goto(url, { waitUntil: "domcontentloaded", timeout: 15000 });
 
     // Only extract prices
   const prices = await page.evaluate(() => {
