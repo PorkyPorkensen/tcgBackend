@@ -15,31 +15,48 @@ async function scrapeSoldPrices(terms) {
   });
 
   await cluster.task(async ({ page, data: term }) => {
-    await page.setRequestInterception(true);
-page.on('request', (req) => {
-  if (req.resourceType() !== 'document') {
-    req.abort();
-  } else {
-    req.continue();
-  }
-});
+    // Set a realistic user-agent and headers
+    await page.setUserAgent(
+      "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"
+    );
+    await page.setExtraHTTPHeaders({
+      "Accept-Language": "en-US,en;q=0.9",
+    });
+    await page.setCacheEnabled(false);
 
-    const url = `https://www.ebay.com/sch/i.html?_nkw=${encodeURIComponent(term)}&LH_Sold=1&LH_Complete=1&_pgn=1`;
-    await page.goto(url, { waitUntil: "domcontentloaded", timeout: 15000 });
+    // Block unnecessary resources but allow xhr and script
+    await page.setRequestInterception(true);
+    page.on("request", (req) => {
+      if (!["document", "xhr", "script"].includes(req.resourceType())) {
+        req.abort();
+      } else {
+        req.continue();
+      }
+    });
+
+    const url = `https://www.ebay.com/sch/i.html?_nkw=${encodeURIComponent(
+      term
+    )}&LH_Sold=1&LH_Complete=1&_pgn=1`;
+
+    await page.goto(url, { waitUntil: "networkidle2", timeout: 20000 });
+
+    // Debug: log first 1000 chars of HTML to check for CAPTCHA or blank page
+    // const html = await page.content();
+    // console.log(html.slice(0, 1000));
 
     // Only extract prices
-  const prices = await page.evaluate(() => {
-    const rows = document.querySelectorAll(".s-card__price span, .s-card__price");
-    return Array.from(rows)
-      .map((el) => el.innerText)
-      .filter(Boolean)
-      .map((str) => {
-        // Remove currency symbols and thousand separators, keep decimal
-        const match = str.replace(/[^0-9.]/g, "").replace(/,/g, "");
-        return parseFloat(match);
-      })
-      .filter((num) => !isNaN(num));
-  });
+    const prices = await page.evaluate(() => {
+      const rows = document.querySelectorAll(".s-card__price span, .s-card__price");
+      return Array.from(rows)
+        .map((el) => el.innerText)
+        .filter(Boolean)
+        .map((str) => {
+          // Remove currency symbols and thousand separators, keep decimal
+          const match = str.replace(/[^0-9.]/g, "").replace(/,/g, "");
+          return parseFloat(match);
+        })
+        .filter((num) => !isNaN(num));
+    });
 
     results[term] = prices.slice(0, 7); // Only return the first 7 prices
   });

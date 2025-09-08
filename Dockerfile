@@ -1,6 +1,6 @@
 FROM node:22-slim
 
-# Install dependencies required for Chrome
+# Install Chrome dependencies
 RUN apt-get update && apt-get install -y \
     wget \
     ca-certificates \
@@ -20,16 +20,18 @@ RUN apt-get update && apt-get install -y \
     libxrandr2 \
     xdg-utils \
     libgbm1 \
+    libxshmfence1 \
+    libxext6 \
+    libxfixes3 \
+    libxi6 \
+    libxtst6 \
     --no-install-recommends && \
     rm -rf /var/lib/apt/lists/*
 
 WORKDIR /app
 
-COPY docker/entrypoint.sh /entrypoint.sh
-RUN chmod +x /entrypoint.sh
-
 COPY . .
 
 RUN npm install
 
-ENTRYPOINT ["/entrypoint.sh"]
+CMD ["node", "server.js"]
