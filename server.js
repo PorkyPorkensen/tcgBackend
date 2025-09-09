@@ -12,7 +12,8 @@ app.use(cors({
   origin: [
     "https://tcgtracker.ca",
     "https://www.tcgtracker.ca",
-    "http://localhost:5173"
+    "http://localhost:5173",
+    "http://localhost:5174"
   ],
 }));
 app.use(express.json());
