@@ -25,8 +25,8 @@ router.post("/add", async (req, res) => {
       cardId: card.id,
       cardName: card.name,
       setName: card.set.name,
-      cardNumber: card.number,
-      imageUrl: card.images.small,
+      cardNumber: card.card_number,
+      imageUrl: card.image,
       condition: card.condition || "NM",
       addedAt: new Date(),
     });
