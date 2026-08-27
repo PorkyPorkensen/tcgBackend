@@ -31,9 +31,9 @@ RUN apt-get update && apt-get install -y \
 WORKDIR /app
 
 COPY . .
-COPY docker/entrypoint.sh /entrypoint.sh
-RUN chmod +x /entrypoint.sh
+COPY docker/entrypoint.sh /docker/entrypoint.sh
+RUN chmod +x /docker/entrypoint.sh
 
 RUN npm install
 
-CMD ["/entrypoint.sh"]
+CMD ["/docker/entrypoint.sh"]
