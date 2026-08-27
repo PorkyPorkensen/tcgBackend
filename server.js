@@ -6,6 +6,8 @@ import { scrapeSoldPrices } from "./utils/scrapeSoldPrices.js"; // Assuming you 
 dotenv.config();
 import cors from "cors";
 import cardRoutes from "./routes/cards.js";
+import justtcgRoutes from "./routes/justtcg.js";
+import tcgcsvRoutes from "./routes/tcgcsv.js";
 dotenv.config();
 const app = express();
 app.use(cors({
@@ -18,6 +20,8 @@ app.use(cors({
 }));
 app.use(express.json());
 app.use("/api/cards", cardRoutes);
+app.use("/api/justtcg", justtcgRoutes);
+app.use("/api/tcgcsv", tcgcsvRoutes);
 
 const getEbayAccessToken = async () => {
 const credentials = Buffer.from(
